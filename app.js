@@ -50,6 +50,9 @@ app.use(function(err, req, res, next) {
 /*  const City = require("./models/city.model")(Sequelize.connection, Sequelize.library);
 City.sync({ force: false, alter: true });
 
+const Newsletter = require("./models/newsletter.model")(Sequelize.connection, Sequelize.library);
+Newsletter.sync({ force: false, alter: true });
+
 const WeatherRecord = require("./models/weatherRecord.model")(Sequelize.connection, Sequelize.library);
 WeatherRecord.belongsTo(City);
 WeatherRecord.sync({ force: false, alter: true }); */
