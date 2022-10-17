@@ -1,9 +1,10 @@
 var express = require('express');
-var weatherRecords = require('../data/weatherRecords');
+const weatherRecord = require("../controllers/weatherRecord.controller.js");
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
-  res.send(JSON.stringify(weatherRecords));
+router.get('/', async function(req, res, next) {
+  var result = await weatherRecord.findAll();
+  res.send(JSON.stringify(result));
 });
 
 module.exports = router;
