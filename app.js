@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var citiesRouter = require('./routes/cities');
 var newslettersRouter = require('./routes/newsletters');
 var weatherRecordsRouter = require('./routes/weatherRecords');
+var ratingsRouter = require('./routes/ratings');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/', indexRouter);
 app.use('/cities', citiesRouter);
 app.use('/newsletters', newslettersRouter);
 app.use('/weatherRecords', weatherRecordsRouter);
+app.use('/ratings', ratingsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -50,11 +52,14 @@ app.use(function(err, req, res, next) {
 /*  const City = require("./models/city.model")(Sequelize.connection, Sequelize.library);
 City.sync({ force: false, alter: true });
 
-const Newsletter = require("./models/newsletter.model")(Sequelize.connection, Sequelize.library);
-Newsletter.sync({ force: false, alter: true });
-
 const WeatherRecord = require("./models/weatherRecord.model")(Sequelize.connection, Sequelize.library);
 WeatherRecord.belongsTo(City);
-WeatherRecord.sync({ force: false, alter: true }); */
+WeatherRecord.sync({ force: false, alter: true });
+
+const Rating = require("./models/rating.model")(Sequelize.connection, Sequelize.library);
+Rating.sync({ force: false, alter: true });
+
+const Newsletter = require("./models/newsletter.model")(Sequelize.connection, Sequelize.library);
+Newsletter.sync({ force: false, alter: true });*/
 
 module.exports = app;
