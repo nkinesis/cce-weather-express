@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const Sequelize = require("./db.connection");
+const setupData = require("./data/setupdata.js")
 
 // import routers
 var indexRouter = require('./routes/index');
@@ -32,12 +33,12 @@ app.use('/weatherRecords', weatherRecordsRouter);
 app.use('/ratings', ratingsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -48,18 +49,35 @@ app.use(function(err, req, res, next) {
 });
 
 /* Database creation */
-/* ATTENTION: do not uncomment unless you want to create the structure on an empty database */
-/*  const City = require("./models/city.model")(Sequelize.connection, Sequelize.library);
-City.sync({ force: false, alter: true });
+const City = require("./models/city.model")(Sequelize.connection, Sequelize.library);
 
 const WeatherRecord = require("./models/weatherRecord.model")(Sequelize.connection, Sequelize.library);
 WeatherRecord.belongsTo(City);
-WeatherRecord.sync({ force: false, alter: true });
 
-const Rating = require("./models/rating.model")(Sequelize.connection, Sequelize.library);
-Rating.sync({ force: false, alter: true });
+Sequelize.connection.sync({ force: false, alter: true }).then(() => {
+  return City.count()
+}).then((count) => {
+  // create cities in the database (if it's empty)
+  if (count == 0) {
+    City.bulkCreate([
+      { name: "Montreal" },
+      { name: "Toronto" },
+      { name: "Ottawa" }
+    ])
+  }
+}).then(() => {
+  return WeatherRecord.count()
+}).then((count) => {
+  // create weather records in the database (if it's empty)
+  if (count == 0) {
+    WeatherRecord.bulkCreate(setupData)
+  }
+}).then(() => {
+  const Rating = require("./models/rating.model")(Sequelize.connection, Sequelize.library);
+  Rating.sync({ force: false, alter: true });
 
-const Newsletter = require("./models/newsletter.model")(Sequelize.connection, Sequelize.library);
-Newsletter.sync({ force: false, alter: true });*/
+  const Newsletter = require("./models/newsletter.model")(Sequelize.connection, Sequelize.library);
+  Newsletter.sync({ force: false, alter: true });
+})
 
 module.exports = app;
